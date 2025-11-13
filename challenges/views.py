@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import HttpResponseNotFound, HttpResponseRedirect, Http404
 from django.urls import reverse
-# from django.template.loader import render_to_string
+from django.template.loader import render_to_string
 
 monthly_challenges = {
     "january":"January Eat no meal for 30 days",
@@ -15,7 +15,8 @@ monthly_challenges = {
     "september":"september Eat no meal for 30 days",
     "october":"october walk for atleast 20 minutes a day!",
     "november":"november Eat no meal for 30 days",
-    "december":"december walk for atleast 20 minutes a day!",
+    # "december":"december walk for atleast 20 minutes a day!",
+    "december": None,
 }
 
 # FOR FIXED ROUTING
@@ -43,7 +44,7 @@ def index(request):
             "path":month_path,
             "months": months
         })
-        return HttpResponse(response_data)
+    
     except:
         return HttpResponseNotFound("Not found")
 
@@ -76,4 +77,6 @@ def monthly_challenge(request, month):
             "text":challenge_text
         })
     except:
-        return HttpResponseNotFound("<h1>This month is not supported</h1>")    
+        raise Http404()
+        # response_date = render_to_string("404.html")
+        # return HttpResponseNotFound(response_date)    
